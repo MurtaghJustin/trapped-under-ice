@@ -43,27 +43,24 @@ export class Board extends React.PureComponent<Props, State> {
     }
 
     setupInput() {
-        window.onkeypress = (e: KeyboardEvent) => {
+        window.onkeydown = (e: KeyboardEvent) => {
+            const previousDirection = this.facing;
             switch (e.which) {
                 // Left
                 case 37:
                     this.facing = Direction.West;
-                    this.accelerate();
                     break;
                 // Up
                 case 38:
                     this.facing = Direction.North;
-                    this.accelerate();
                     break;
                 // Right
                 case 39:
                     this.facing = Direction.East;
-                    this.accelerate();
                     break;
                 // Down
                 case 40:
                     this.facing = Direction.South;
-                    this.accelerate();
                     break;
                 // Space
                 case 32:
@@ -76,6 +73,23 @@ export class Board extends React.PureComponent<Props, State> {
                 default:
                     // Ok, then stop
                     break;
+            }
+
+            if (this.facing === previousDirection)
+                this.accelerate();
+        }
+
+        window.onkeyup = (e: KeyboardEvent) => {
+            switch (e.which) {
+                // Left
+                case 37:
+                // Up
+                case 38:
+                // Right
+                case 39:
+                // Down
+                case 40:
+                    this.decelerate();
             }
         }
     }
@@ -105,6 +119,13 @@ export class Board extends React.PureComponent<Props, State> {
             this.speed = max;
     }
 
+    decelerate() {
+        this.speed--;
+
+        if (this.speed < 0)
+            this.speed = 0;
+    }
+
     move() {
         if (this.speed > 0) {
             switch (this.facing) {
@@ -126,9 +147,9 @@ export class Board extends React.PureComponent<Props, State> {
             if (!context)
                 return;
             let view = this.getView();
-            let lines = this.level.layout.length;
+            let lines = view.length;
             for (let y = 0; y < lines; y++) {
-                let line = this.level.layout[y];
+                let line = view[y];
                 let ypos = _tilesize * y;
 
                 for (let x = 0; x < line.length; x++) {
@@ -137,11 +158,10 @@ export class Board extends React.PureComponent<Props, State> {
 
                     if (tile.contents.length > 0) {
                         for (let i = 0; i < tile.contents.length; i++) {
+                            //let img = this.props.sprites[tile.contents[i].url];
                             let img = new Image(_tilesize, _tilesize);
                             img.src = tile.contents[i].url;
-                            img.onload = () => {
-                                context?.drawImage(img, xpos, ypos, _tilesize, _tilesize);
-                            }
+                            context?.drawImage(img, xpos, ypos, _tilesize, _tilesize);
                         }
                     }
                     else {
@@ -161,11 +181,11 @@ export class Board extends React.PureComponent<Props, State> {
 
     // Events
     attack() {
-
+        // TODO: Play the attack animation in the tile next to the character in the direction they are facing
     }
 
     jump() {
-
+        // TODO: Jump 1.25 tiles (so there's a bit of wiggle room)
     }
 
     // refs
@@ -181,6 +201,7 @@ export class Board extends React.PureComponent<Props, State> {
 
 interface Props {
     start: Pos;
+    sprites: { [url: string]: HTMLImageElement }
 }
 
 interface State {
