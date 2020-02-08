@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { RawLevel, Level, Tile, RawTile } from './models/level';
+import { _mapWidth, _mapHeight } from '../_settings';
 
 export const Board: React.FC<Props> = (props) => {
 
@@ -17,11 +18,10 @@ interface Props {
 
 export const ImportLevel = (rawLvl: RawLevel) => {
     const level: Tile[][] = [];
-    const groundTile = '';
-    const wallTile = '';
+    const groundTile = '/sprites/ground.png';
+    const wallTile = '/sprites/wall/png';
     const monsterSprites = [
-        '',
-        ''
+        '/sprites/slime.png'
     ];
 
     for (let y = 0; y < rawLvl.layout.length; y++) {
@@ -53,4 +53,27 @@ export const ImportLevel = (rawLvl: RawLevel) => {
         defaultSprite: groundTile,
         layout: level
     } as Level;
+}
+
+export const RandomLevel = (width: number, height: number) => {
+    let level = [];
+
+    for (let y = 0; y < height; y++) {
+        let line = [];
+
+        for (let x = 0; x < width; x++) {
+            line.push(Math.floor(Math.random() * 3));
+        }
+
+        level.push(line);
+    }
+
+    return level;
+}
+
+export const GetNonsenseLevel = () => {
+    let content = RandomLevel(_mapWidth * 4, _mapHeight * 4);
+    return ImportLevel({
+        layout: content
+    });
 }
