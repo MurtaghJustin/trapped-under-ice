@@ -13,28 +13,60 @@ export class Board extends React.PureComponent<Props, State> {
         super(props);
         
         this.state = {
-            level: GetNonsenseLevel()
+            
         };
 
         // Refs
         this.canvasRef = React.createRef();
+
+        // privates
+        this.level = GetNonsenseLevel();
     }
 
     render() {
         return (
-            <canvas id='board' height={768} width={768} ref={this.canvasRef}></canvas>
+            <canvas id='board' height={765} width={765} ref={this.canvasRef}></canvas>
         );
     }
 
     componentDidMount() {
+        this.setupGame();
+    }
+
+    setupGame() {
+        this.setupInput();
+        this.setupBoard();
+        this.setupGameLoop();
+    }
+
+    setupInput() {
+        window.onkeypress = (e: KeyboardEvent) => {
+            switch (e.which) {
+                // Left
+                case 37:
+                    break;
+                // Up
+                case 38:
+                    break;
+                // Right
+                case 39:
+                    break;
+                // Down
+                case 40:
+                    break;
+            }
+        }
+    }
+
+    setupBoard() {
         if (this.canvasRef.current) {
             let context = this.canvasRef.current.getContext('2d');
             if (!context)
                 return;
 
-            let lines = this.state.level.layout.length;
+            let lines = this.level.layout.length;
             for (let y = 0; y < lines; y++) {
-                let line = this.state.level.layout[y];
+                let line = this.level.layout[y];
                 let ypos = _tilesize * y;
 
                 for (let x = 0; x < line.length; x++) {
@@ -47,13 +79,12 @@ export class Board extends React.PureComponent<Props, State> {
                             img.src = tile.contents[i].url;
                             img.onload = () => {
                                 context?.drawImage(img, xpos, ypos, _tilesize, _tilesize);
-                                console.log(img, xpos, ypos);
                             }
                         }
                     }
                     else {
                         let img = new Image(_tilesize, _tilesize);
-                        img.src = this.state.level.defaultSprite;
+                        img.src = this.level.defaultSprite;
                         context.drawImage(img, xpos, ypos);
                     }
                 }
@@ -61,8 +92,25 @@ export class Board extends React.PureComponent<Props, State> {
         }
     }
 
+    setupGameLoop() {
+
+    }
+
+    onFrame() {
+        // TODO: everything
+    }
+
+    renderBoard() {
+        //
+    }
+
+
+
     // refs
     canvasRef: React.RefObject<HTMLCanvasElement>;
+
+    // privates
+    private level: Level;
 }
 
 interface Props {
@@ -70,5 +118,5 @@ interface Props {
 }
 
 interface State {
-    level: Level;
+    
 }

@@ -6,12 +6,16 @@ export const ImportLevel = (rawLvl: RawLevel) => {
     const groundTile = '/sprites/ground.png';
     const wallTile = '/sprites/wall.png';
     const monsterSprites = [
-        '/sprites/slime.png'
+        '/sprites/monsters/slime.png'
     ];
+
+    let monsterCount = 0;
 
     for (let y = 0; y < rawLvl.layout.length; y++) {
         let rawLine = rawLvl.layout[y];
         const line = [];
+        let rowMonsters = 0;
+
         for (let x = 0; x < rawLine.length; x++) {
             let tile = {
                 contents: []
@@ -27,7 +31,11 @@ export const ImportLevel = (rawLvl: RawLevel) => {
                 
                 switch (rawTile) {
                     case RawTile.Monster:
-                        tile.contents.push({ url: monsterSprites[random] });
+                        if (monsterCount < 16 && !rowMonsters && Math.random() > 0.98) {
+                            monsterCount++;
+                            rowMonsters++;
+                            tile.contents.push({ url: monsterSprites[random] });
+                        }
                     // TODO: The rest
                 }
             }
@@ -60,7 +68,7 @@ export const RandomLevel = (width: number, height: number) => {
 }
 
 export const GetNonsenseLevel = () => {
-    let content = RandomLevel(_mapWidth, _mapHeight);
+    let content = RandomLevel(_mapWidth * 4, _mapHeight * 4);
     return ImportLevel({
         layout: content
     });
