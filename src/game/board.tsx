@@ -21,6 +21,9 @@ export class Board extends React.PureComponent<Props, State> {
 
         // privates
         this.level = GetNonsenseLevel();
+        this.facing = Direction.East;
+        this.speed = 0;
+        this.pos = props.start;
     }
 
     render() {
@@ -44,26 +47,85 @@ export class Board extends React.PureComponent<Props, State> {
             switch (e.which) {
                 // Left
                 case 37:
+                    this.facing = Direction.West;
+                    this.accelerate();
                     break;
                 // Up
                 case 38:
+                    this.facing = Direction.North;
+                    this.accelerate();
                     break;
                 // Right
                 case 39:
+                    this.facing = Direction.East;
+                    this.accelerate();
                     break;
                 // Down
                 case 40:
+                    this.facing = Direction.South;
+                    this.accelerate();
+                    break;
+                // Space
+                case 32:
+                    this.jump();
+                    break;
+                // Ctrl
+                case 17:
+                    this.attack();
+                    break;
+                default:
+                    // Ok, then stop
                     break;
             }
         }
     }
 
     setupBoard() {
+        this.renderBoard();
+    }
+
+    setupGameLoop() {
+        const frameDelay = 1000 / 48;
+
+        this.interval = setInterval(() => {
+            this.onFrame();
+        });
+    }
+
+    onFrame() {
+        this.move();
+        this.renderBoard();
+    }
+
+    accelerate() {
+        const max = 4;
+
+        this.speed++;
+        if (this.speed > max)
+            this.speed = max;
+    }
+
+    move() {
+        if (this.speed > 0) {
+            switch (this.facing) {
+                case Direction.North:
+                    break;
+                case Direction.South:
+                    break;
+                case Direction.East:
+                    break;
+                case Direction.West:
+                    break;
+            }
+        }
+    }
+
+    renderBoard() {
         if (this.canvasRef.current) {
             let context = this.canvasRef.current.getContext('2d');
             if (!context)
                 return;
-
+            let view = this.getView();
             let lines = this.level.layout.length;
             for (let y = 0; y < lines; y++) {
                 let line = this.level.layout[y];
@@ -92,25 +154,29 @@ export class Board extends React.PureComponent<Props, State> {
         }
     }
 
-    setupGameLoop() {
+    getView() {
+        // TODO: Make this calculate things and such
+        return this.level.layout;
+    }
+
+    // Events
+    attack() {
 
     }
 
-    onFrame() {
-        // TODO: everything
+    jump() {
+
     }
-
-    renderBoard() {
-        //
-    }
-
-
 
     // refs
     canvasRef: React.RefObject<HTMLCanvasElement>;
 
     // privates
     private level: Level;
+    private facing: Direction;
+    private speed: number;
+    private pos: Pos;
+    private interval: number | null = null;
 }
 
 interface Props {
@@ -118,5 +184,12 @@ interface Props {
 }
 
 interface State {
-    
+    //
+}
+
+enum Direction {
+    North,
+    South,
+    East,
+    West
 }
