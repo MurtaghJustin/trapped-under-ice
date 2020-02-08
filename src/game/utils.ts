@@ -4,7 +4,7 @@ import { _mapWidth, _mapHeight } from '../_settings';
 export const ImportLevel = (rawLvl: RawLevel) => {
     const level: Tile[][] = [];
     const groundTile = '/sprites/ground.png';
-    const wallTile = '/sprites/wall/png';
+    const wallTile = '/sprites/wall.png';
     const monsterSprites = [
         '/sprites/slime.png'
     ];
@@ -31,7 +31,10 @@ export const ImportLevel = (rawLvl: RawLevel) => {
                     // TODO: The rest
                 }
             }
+            line.push(tile);
         }
+
+        level.push(line);
     }
 
     return {

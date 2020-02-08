@@ -6,7 +6,7 @@ export const Game: React.FC<Props> = (props) => {
 
     return (
         <div className='game-container'>
-            <Board />
+            <Board start={{ x: 0, y: 7 }} />
         </div>
     );
 }
