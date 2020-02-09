@@ -2,6 +2,7 @@ import * as React from 'react';
 import './index.scss';
 import { Board } from './board';
 import { _tilesize } from '../_settings';
+import { LoadingBoard } from './loadingBoard';
 
 export class Game extends React.PureComponent<Props, State>  {
     /**
@@ -14,7 +15,8 @@ export class Game extends React.PureComponent<Props, State>  {
             spriteUrls: [
                 '/sprites/ground.png',
                 '/sprites/wall.png',
-                '/sprites/monsters/slime.png'
+                '/sprites/monsters/slime.png',
+                '/sprites/unidab.png'
             ],
             loaded: 0
         }
@@ -25,7 +27,7 @@ export class Game extends React.PureComponent<Props, State>  {
             <div className='game-container'>
                 {(this.state.loaded >= this.state.spriteUrls.length) ?
                     <Board start={{ x: 9, y: 9 }} sprites={{}} /> :
-                    <div>Loading...</div>
+                    <LoadingBoard />
                 }
             </div>
         );
