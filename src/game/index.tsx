@@ -25,7 +25,7 @@ export class Game extends React.PureComponent<Props, State>  {
     render () {
         return (
             <div className='game-container'>
-                {(this.state.loaded >= this.state.spriteUrls.length) ?
+                {(this.state.loaded >= this.state.spriteUrls.length && false) ?
                     <Board start={{ x: 9, y: 9 }} sprites={{}} /> :
                     <LoadingBoard />
                 }
